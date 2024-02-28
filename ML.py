@@ -8,6 +8,12 @@ import numpy as np
 from collections import defaultdict
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
+import nltk
+
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('corpus')
+nltk.download('wordnet')
 
 
 def preprocess_text(text):
