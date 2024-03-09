@@ -1,0 +1,125 @@
+#include<stdio.h>
+#include<math.h>
+#include<stdlib.h>
+#include<time.h>
+
+int main() {
+    printf("-------------------------Welcome to Hackathon 2---------------------------\n\nThe Registration timings are from 9 am to 10 am on 1st to 3rd December\n");
+    int opt, s, cost, count = 1, contact;
+    char name[30], choice, reg[9], date[10], t[8], event[20], opt2;
+    int eventsum1 = 0, eventsum2 = 0, eventsum3 = 0, total = 0;
+
+    FILE *file;
+    file = fopen("hackathon.csv", "w");
+    if (file == NULL) {
+        perror("Error opening file");
+        return 1;
+    } else {
+        fprintf(file, "S.no.,Name,reg. no.,contact,type of event,cost,date,time\n");
+        fclose(file);
+    }
+
+    
+    time_t currentTime;
+    struct tm *localTime;
+    int year, month, day, hour, minute, second;
+
+    int c;
+    do {
+        time(&currentTime);
+        localTime = localtime(&currentTime);
+        year = localTime->tm_year + 1900;
+        month = localTime->tm_mon + 1;
+        day = localTime->tm_mday;
+        hour = localTime->tm_hour;
+        minute = localTime->tm_min;
+        second = localTime->tm_sec;
+
+        printf("Menu:\n1.Registration(9-10a.m)\n2.Display event details.\n3.Report\n");
+        scanf("%d",&c);
+
+        printf("Enter your first name:");
+        scanf("%s", name);
+        printf("\n\nHi %s\n\n", name);
+        printf("Enter your VIT registration number:");
+        scanf("%s", reg);
+        printf("Enter your contact number:");
+        scanf("%d", &contact);
+
+        switch(c) {
+            case 1:
+                if (hour >= 9 && hour < 10) {
+                    do {
+                        printf("What is the event you want to participate in?:\nType 1 for Programming event(Rs. 250) \nType 2 for Design event(Rs. 350) \nType 3 for Prototyping event(Rs.150)\n");
+                        printf("CHOOSE YOUR DESIRED OPTION:");
+                        scanf("%d", &opt);
+
+                        switch (opt) {
+                            case 1:
+                                eventsum1 += 250;
+                                cost = 250;
+                                printf("You have chosen the Programming event.\n");
+                                break;
+                            case 2:
+                                eventsum2 += 350;
+                                cost = 350;
+                                printf("You have chosen the Design event.\n");
+                                break;
+                            case 3:
+                                eventsum3 += 150;
+                                cost = 150;
+                                printf("You have chosen the Prototyping event.\n");
+                                break;
+                            default:
+                                printf("Invalid request.\n");
+                                break;
+                        }
+
+                        total = eventsum1 + eventsum2 + eventsum3;
+                        printf("Do you want to register for any other events? (type y for yes and n for no):\n");
+                        scanf(" %c", &choice);
+                        count++;
+                    } while (choice == 'y' || choice == 'Y');
+
+                    file = fopen("hackathon.csv", "a");
+                    fprintf(file, "%d, %s, %s, %d, %s, %d, %d/%d/%d, %d:%d:%d \n", count, name, reg, contact, "programming", cost, day, month, year, hour, minute, second);
+                    fprintf(file, "Total revenue: %d\n", total);
+                    fclose(file);
+                    printf("Registration successful!\n");
+                } else {
+                    printf("Registration is only open from 9 am to 10 am.\n");
+                }
+                break;
+
+            case 2:
+                printf("1. Programming event ---- 2-3:30 p.m. ------ Rs.250\n2. Design ------ 4-5:30 p.m.------- Rs. 350\n3.Prototyping-----6-7:30 p.m.-----Rs. 150\n");
+                break;
+
+            case 3:
+                {
+                    int password;
+                    printf("Enter password:");
+                    scanf("%d", &password);
+
+                    if (password == 1234) {
+                        printf("\n\nRevenue report:\n");
+                        printf("Revenue from event 1: %d\n", eventsum1);
+                        printf("Revenue from event 2: %d\n", eventsum2);
+                        printf("Revenue from event 3: %d\n", eventsum3);
+                        printf("Total revenue: %d\n", total);
+                    } else {
+                        printf("Incorrect password. Access denied.\n");
+                    }
+                    break;
+                }
+
+            default:
+                printf("Invalid option\n");
+                break;
+        }
+
+        printf("\nDo you want to go back to the menu? (type y for yes):");
+        scanf(" %c", &opt2);
+    } while (opt2 == 'y' || opt2 == 'Y');
+    return 0;
+}
